@@ -12,6 +12,8 @@ echo "my.srv1.com my.srv2.com my.srv3.com" | ccmysql -q "show master status; sel
 ## Usage
 ```
 Usage of ccmysql:
+  -C string
+        Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p
   -H string
     	Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin
   -Q string
@@ -48,7 +50,7 @@ You may provide a query or a list of queries in the following ways:
 Queries are delimited by a semicolon (`;`). The last query may, but does not have to, be terminated by a semicolon.
 Quotes are respected, up to a reasonable level. It is valid to include a semicolon in a quoted text, as in `select 'single;query'`. However `ccmysql` does not employ a full blown parser, so please don't overdo it. For example, the following may not be parsed correctly: `select '\';\''`. You get it.
 
-#### Credentials
+#### Credentials input
 
 You may provide credentials in the following ways:
 - via `-u myusername -p mypassword` (default username is your OS user; default password is empty)
@@ -58,3 +60,19 @@ You may provide credentials in the following ways:
   user=myuser
   password=mypassword
   ```
+
+#### Execution
+
+Hosts are executed in parallel, with up to `128` concurrent executions (otherwise more hosts are accepted but wait in queue).
+For each host, the set of queries executes sequentially. Error on any query terminates execution of that host.
+Errors are isolated to hosts; an error while connecting or executing on host1 should not affect execution on host2.
+
+#### Output
+There is only output generated for queries that provide an output, typically `SELECT` queries. Queries such as
+`SET GLOBAL...` or `FLUSH BINARY LOGS` or `CREATE DATABASE ...` do not generate and output.
+
+Output is written to _stdout_. It is tab delimited. There is one output line per row returning from either query.
+The first printed token is the fully qualified `hostname:port` of the instance whose query output is printed.
+Remember that execution happens concurrently on multiple hosts. Output rows are therefore ordered arbitrarily
+in between hosts, though deterministically for any specific host.
+Other tokens are whatever columns were returned by the queries.
