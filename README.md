@@ -10,6 +10,7 @@ echo "my.srv1.com my.srv2.com my.srv3.com" | ccmysql -q "show master status; sel
 ```
 
 ## Usage
+
 ```
 Usage of ccmysql:
   -C string
@@ -68,6 +69,7 @@ For each host, the set of queries executes sequentially. Error on any query term
 Errors are isolated to hosts; an error while connecting or executing on host1 should not affect execution on host2.
 
 #### Output
+
 There is only output generated for queries that provide an output, typically `SELECT` queries. Queries such as
 `SET GLOBAL...` or `FLUSH BINARY LOGS` or `CREATE DATABASE ...` do not generate and output.
 
@@ -76,3 +78,8 @@ The first printed token is the fully qualified `hostname:port` of the instance w
 Remember that execution happens concurrently on multiple hosts. Output rows are therefore ordered arbitrarily
 in between hosts, though deterministically for any specific host.
 Other tokens are whatever columns were returned by the queries.
+
+## Notes
+
+Credits to Domas Mituzas for creating [pmysql](http://dom.as/2010/08/12/pmysql-multi-server-mysql-client/).
+This project mostly reimplements `pmysql` and delivers it in an easy to redistribute format.
