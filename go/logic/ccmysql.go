@@ -8,13 +8,13 @@ import (
 	"github.com/outbrain/golib/sqlutils"
 )
 
+const (
+	maxConcurrentConnections = 128
+)
+
+// queryHost connects to a given host, issues the given set of queries, and outputs the results
+// line per row in tab delimited format
 func queryHost(host string, user string, password string, queries []string, timeout int) error {
-	if host == "" {
-		return nil
-	}
-	if !strings.Contains(host, ":") {
-		host = fmt.Sprintf("%s:%d", host, defaultMySQLPort)
-	}
 	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/?timeout=%ds", user, password, host, timeout)
 	db, _, err := sqlutils.GetDB(mysqlURI)
 	if err != nil {
@@ -36,5 +36,24 @@ func queryHost(host string, user string, password string, queries []string, time
 		}
 	}
 	return nil
+}
 
+//  QueryHosts will issue concurrent queries on given list of hosts
+func QueryHosts(hosts []string, user string, password string, queries []string, timeout int) {
+	concurrentHosts := make(chan bool, maxConcurrentConnections)
+	completedHosts := make(chan bool)
+
+	for _, host := range hosts {
+		go func(host string) {
+			concurrentHosts <- true
+			queryHost(host, user, password, queries, timeout)
+			<-concurrentHosts
+
+			completedHosts <- true
+		}(host)
+	}
+	// Barrier. Wait for all to complete
+	for range hosts {
+		<-completedHosts
+	}
 }
