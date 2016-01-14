@@ -95,6 +95,19 @@ user=msandbox
 password=msandbox
 ```
 
+Warmup: select some stuff
+```
+cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "select @@global.server_id, @@global.binlog_format, @@global.version"
+```
+A sample output is:
+```
+localhost:22296	103	STATEMENT	5.6.28
+localhost:22294	101	STATEMENT	5.6.28-log
+localhost:22293	1	STATEMENT	5.6.28-log
+localhost:22295	102	STATEMENT	5.6.28-log
+```
+The output is tab delimited.
+
 Show only servers that are configured as replicas:
 ```
 cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "show slave status" | awk '{print $1}'
