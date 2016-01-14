@@ -143,7 +143,7 @@ See [LICENSE](LICENSE). _ccmysql_ imports and includes 3rd party libraries, whic
 
 ## Binaries, downloads
 
-Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [Releases](releases)
+Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [Releases](https://github.com/github/ccmysql/releases)
 
 ## Build
 
