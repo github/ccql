@@ -139,7 +139,7 @@ cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 
 
 ## LICENSE
 
-See [LICENSE](LICENSE). _ccmysql_ imports and includes 3rd party libraries, which have their own license. These are found under [vendor](tree/master/vendor).
+See [LICENSE](LICENSE). _ccmysql_ imports and includes 3rd party libraries, which have their own license. These are found under [vendor](vendor).
 
 ## Binaries, downloads
 
@@ -148,7 +148,7 @@ Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [
 ## Build
 
 _ccmysql_ is built with Go 1.5, and uses the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
-Please see the [build file](blob/master/build.sh)
+Please see the [build file](build.sh)
 
 ## Notes
 
