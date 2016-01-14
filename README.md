@@ -79,6 +79,51 @@ Remember that execution happens concurrently on multiple hosts. Output rows are 
 in between hosts, though deterministically for any specific host.
 Other tokens are whatever columns were returned by the queries.
 
+## More examples
+
+Some examples dealing with replication follow. Combining shell scripting we can have some real fun.
+For brevity, we assume `/tmp/hosts.txt` contains a list of servers, as follows:
+```
+echo "localhost:22293, localhost:22294, localhost:22295, localhost:22296" > /tmp/hosts.txt
+```
+(note that hosts can be separated by spaces, commas, newlines or any combination)
+
+We also assume credentials are stored in `/etc/ccmysql.cnf`:
+```
+[client]
+user=msandbox
+password=msandbox
+```
+
+Show only servers that are configured as replicas:
+```
+cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "show slave status" | awk '{print $1}'
+```
+Apply `slave_net_timeout` only on replicas:
+```
+cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "show slave status;" | awk '{print $1}' | ccmysql -C /etc/ccmysql.cnf -q "set global slave_net_timeout := 10"
+```
+
+Getting tired of typing `ccmysql -C /etc/ccmysql.cnf`? Let's make a shortcut:
+```
+alias cccmysql="ccmysql -C /etc/ccmysql.cnf"
+```
+
+Which servers are acting as masters to someone?
+```
+cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}'
+```
+
+Of those, which are also replicating? i.e. act as intermediate masters?
+```
+cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccmysql -q "show slave status" | awk '{print $1}'
+```
+
+Set `sync_binlog=0` on all intermediate masters:
+```
+cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccmysql -q "show slave status" | awk '{print $1}' | cccmysql -q "set global sync_binlog=0"
+```
+
 ## Notes
 
 Credits to Domas Mituzas for creating [pmysql](http://dom.as/2010/08/12/pmysql-multi-server-mysql-client/).
