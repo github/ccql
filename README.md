@@ -137,6 +137,19 @@ Set `sync_binlog=0` on all intermediate masters:
 cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccmysql -q "show slave status" | awk '{print $1}' | cccmysql -q "set global sync_binlog=0"
 ```
 
+## LICENSE
+
+See [LICENSE](LICENSE). _ccmysql_ imports and includes 3rd party libraries, which have their own license. These are found under [vendor](tree/master/vendor).
+
+## Binaries, downloads
+
+Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [Releases](releases)
+
+## Build
+
+_ccmysql_ is built with Go 1.5, and uses the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
+Please see the [build file](blob/master/build.sh)
+
 ## Notes
 
 Credits to Domas Mituzas for creating [pmysql](http://dom.as/2010/08/12/pmysql-multi-server-mysql-client/).
