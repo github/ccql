@@ -119,22 +119,22 @@ cat /tmp/hosts.txt | ccql -C /etc/ccql.cnf -q "show slave status;" | awk '{print
 
 Getting tired of typing `ccql -C /etc/ccql.cnf`? Let's make a shortcut:
 ```
-alias cccql="ccql -C /etc/ccql.cnf"
+alias ccql="ccql -C /etc/ccql.cnf"
 ```
 
 Which servers are acting as masters to someone?
 ```
-cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}'
+cat /tmp/hosts.txt | ccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}'
 ```
 
 Of those, which are also replicating? i.e. act as intermediate masters?
 ```
-cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccql -q "show slave status" | awk '{print $1}'
+cat /tmp/hosts.txt | ccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | ccql -q "show slave status" | awk '{print $1}'
 ```
 
 Set `sync_binlog=0` on all intermediate masters:
 ```
-cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccql -q "show slave status" | awk '{print $1}' | cccql -q "set global sync_binlog=0"
+cat /tmp/hosts.txt | ccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | ccql -q "show slave status" | awk '{print $1}' | ccql -q "set global sync_binlog=0"
 ```
 
 ## LICENSE
