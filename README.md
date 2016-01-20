@@ -1,18 +1,18 @@
-# ccmysql
+# ccql
 Multi server MySQL client
 
-`ccmysql` is a simple utility which executes a given a set of queries on a given set of MySQL hosts
+`ccql` is a simple executable utility which executes a given a set of queries on a given set of MySQL hosts
  in parallel.
 
 Quick example:
 ```
-echo "my.srv1.com my.srv2.com my.srv3.com" | ccmysql -q "show master status; select @@server_id" -u myuser -p 123456
+echo "my.srv1.com my.srv2.com my.srv3.com" | ccql -q "show master status; select @@server_id" -u myuser -p 123456
 ```
 
 ## Usage
 
 ```
-Usage of ccmysql:
+Usage of ccql:
   -C string
         Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p
   -H string
@@ -36,7 +36,7 @@ Usage of ccmysql:
 You may provide a list of hosts in the following ways:
 - via `-h my.srv1.com:3307 my.srv2.com my.srv3.com`
 - via `-H /path/to/hosts.txt`
-- via _stdin_, as in `echo "my.srv1.com:3307 my.srv2.com my.srv3.com" | ccmysql ...`
+- via _stdin_, as in `echo "my.srv1.com:3307 my.srv2.com my.srv3.com" | ccql ...`
 
 Hostnames can be separated by spaces, commas, newline characters or all the above.
 They may indicate a port. The default port, if unspecified, is `3306`
@@ -49,7 +49,7 @@ You may provide a query or a list of queries in the following ways:
 - single or mutiple queries from text file: `-Q /path/to/queries.sql`
 
 Queries are delimited by a semicolon (`;`). The last query may, but does not have to, be terminated by a semicolon.
-Quotes are respected, up to a reasonable level. It is valid to include a semicolon in a quoted text, as in `select 'single;query'`. However `ccmysql` does not employ a full blown parser, so please don't overdo it. For example, the following may not be parsed correctly: `select '\';\''`. You get it.
+Quotes are respected, up to a reasonable level. It is valid to include a semicolon in a quoted text, as in `select 'single;query'`. However `ccql` does not employ a full blown parser, so please don't overdo it. For example, the following may not be parsed correctly: `select '\';\''`. You get it.
 
 #### Credentials input
 
@@ -88,7 +88,7 @@ echo "localhost:22293, localhost:22294, localhost:22295, localhost:22296" > /tmp
 ```
 (note that hosts can be separated by spaces, commas, newlines or any combination)
 
-We also assume credentials are stored in `/etc/ccmysql.cnf`:
+We also assume credentials are stored in `/etc/ccql.cnf`:
 ```
 [client]
 user=msandbox
@@ -97,7 +97,7 @@ password=msandbox
 
 Warmup: select some stuff
 ```
-cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "select @@global.server_id, @@global.binlog_format, @@global.version"
+cat /tmp/hosts.txt | ccql -C /etc/ccql.cnf -q "select @@global.server_id, @@global.binlog_format, @@global.version"
 ```
 A sample output is:
 ```
@@ -110,45 +110,52 @@ The output is tab delimited.
 
 Show only servers that are configured as replicas:
 ```
-cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "show slave status" | awk '{print $1}'
+cat /tmp/hosts.txt | ccql -C /etc/ccql.cnf -q "show slave status" | awk '{print $1}'
 ```
 Apply `slave_net_timeout` only on replicas:
 ```
-cat /tmp/hosts.txt | ccmysql -C /etc/ccmysql.cnf -q "show slave status;" | awk '{print $1}' | ccmysql -C /etc/ccmysql.cnf -q "set global slave_net_timeout := 10"
+cat /tmp/hosts.txt | ccql -C /etc/ccql.cnf -q "show slave status;" | awk '{print $1}' | ccql -C /etc/ccql.cnf -q "set global slave_net_timeout := 10"
 ```
 
-Getting tired of typing `ccmysql -C /etc/ccmysql.cnf`? Let's make a shortcut:
+Getting tired of typing `ccql -C /etc/ccql.cnf`? Let's make a shortcut:
 ```
-alias cccmysql="ccmysql -C /etc/ccmysql.cnf"
+alias cccql="ccql -C /etc/ccql.cnf"
 ```
 
 Which servers are acting as masters to someone?
 ```
-cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}'
+cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}'
 ```
 
 Of those, which are also replicating? i.e. act as intermediate masters?
 ```
-cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccmysql -q "show slave status" | awk '{print $1}'
+cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccql -q "show slave status" | awk '{print $1}'
 ```
 
 Set `sync_binlog=0` on all intermediate masters:
 ```
-cat /tmp/hosts.txt | cccmysql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccmysql -q "show slave status" | awk '{print $1}' | cccmysql -q "set global sync_binlog=0"
+cat /tmp/hosts.txt | cccql -q "show slave status;" | awk -F $'\t' '{print $3 ":" $5}' | sort | uniq | cccql -q "show slave status" | awk '{print $1}' | cccql -q "set global sync_binlog=0"
 ```
 
 ## LICENSE
 
-See [LICENSE](LICENSE). _ccmysql_ imports and includes 3rd party libraries, which have their own license. These are found under [vendor](vendor).
+See [LICENSE](LICENSE). _ccql_ imports and includes 3rd party libraries, which have their own license. These are found under [vendor](vendor).
 
 ## Binaries, downloads
 
-Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [Releases](https://github.com/github/ccmysql/releases)
+Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [Releases](https://github.com/github/ccql/releases)
 
 ## Build
 
-_ccmysql_ is built with Go 1.5, and uses the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
+_ccql_ is built with Go 1.5, and uses the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
 Please see the [build file](build.sh)
+
+## What's in a name?
+
+_ccql_ is an abbreviation for _Concurrent Client for MySQL_ or something. We had a few iterations with the name
+but had to replace one and we were all like _yeah_ and _whoa_ and fun times. Eventually we came by this name
+which upset Tom being "too much on the left-side of the keyboard when typing" and that settled the matter.
+Tom uses `alias a='ccql'`.
 
 ## Notes
 
