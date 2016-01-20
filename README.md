@@ -159,5 +159,10 @@ Tom uses `alias a='ccql'`.
 
 ## Notes
 
-Credits to Domas Mituzas for creating [pmysql](http://dom.as/2010/08/12/pmysql-multi-server-mysql-client/).
+- Credits to Domas Mituzas for creating [pmysql](http://dom.as/2010/08/12/pmysql-multi-server-mysql-client/).
 This project mostly reimplements `pmysql` and delivers it in an easy to redistribute format.
+
+- Pronounce "see-sequel"
+
+- This project is open to [contributions](CONTRIBUTING.md). Generally speaking it should be kept small
+and simple.
