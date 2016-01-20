@@ -2,14 +2,14 @@
 
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
 
-This project adheres to the [Open Code of Conduct](http://todogroup.org/opencodeofconduct/#ccmysql/opensource@github.com). By participating, you are expected to uphold this code.
+This project adheres to the [Open Code of Conduct](http://todogroup.org/opencodeofconduct/#ccql/opensource@github.com). By participating, you are expected to uphold this code.
 
 ## Submitting a pull request
 
-0. [Fork](https://github.com/github/ccmysql/fork) and clone the repository
+0. [Fork](https://github.com/github/ccql/fork) and clone the repository
 0. Create a new branch: `git checkout -b my-branch-name`
 0. Make your change, add tests, and make sure the tests still pass
-0. Push to your fork and [submit a pull request](https://github.com/github/ccmysql/compare)
+0. Push to your fork and [submit a pull request](https://github.com/github/ccql/compare)
 0. Pat your self on the back and wait for your pull request to be reviewed and merged.
 
 Here are a few things you can do that will increase the likelihood of your pull request being accepted:

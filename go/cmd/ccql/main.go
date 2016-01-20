@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 
-	"github.com/github/ccmysql/go/logic"
-	"github.com/github/ccmysql/go/sql"
-	"github.com/github/ccmysql/go/text"
+	"github.com/github/ccql/go/logic"
+	"github.com/github/ccql/go/sql"
+	"github.com/github/ccql/go/text"
 
 	"github.com/outbrain/golib/log"
 	"gopkg.in/gcfg.v1"
