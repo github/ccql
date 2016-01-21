@@ -12,6 +12,10 @@ import (
 	"os/user"
 )
 
+const (
+	maxAllowedConcurrentConnections uint = 128
+)
+
 // main is the application's entry point. It will either spawn a CLI or HTTP itnerfaces.
 func main() {
 	osUser := ""
@@ -27,7 +31,8 @@ func main() {
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
 	queriesFile := flag.String("Q", "", "Query/queries input file")
-	timeout := flag.Int("t", 0, "Connect timeout seconds")
+	timeout := flag.Uint("t", 0, "Connect timeout seconds")
+	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
 	flag.Parse()
 
 	if *queriesText == "" && *queriesFile == "" {
@@ -55,6 +60,13 @@ func main() {
 		log.Fatalf("No hosts given")
 	}
 
+	if *maxConcurrency > maxAllowedConcurrentConnections {
+		log.Fatalf("Max concurrent connections (-m) may not exceed %d", maxAllowedConcurrentConnections)
+	}
+	if *maxConcurrency < 1 {
+		*maxConcurrency = 1
+	}
+
 	if *credentialsFile != "" {
 		mySQLConfig := struct {
 			Client struct {
@@ -71,5 +83,5 @@ func main() {
 		}
 	}
 
-	logic.QueryHosts(hosts, *user, *password, queries, *timeout)
+	logic.QueryHosts(hosts, *user, *password, queries, *maxConcurrency, *timeout)
 }

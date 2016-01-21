@@ -21,6 +21,8 @@ Usage of ccql:
     	Query/queries input file
   -h string
     	Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin
+  -m uint
+    	Max concurrent connections (default 32)
   -p string
     	MySQL password
   -q string
