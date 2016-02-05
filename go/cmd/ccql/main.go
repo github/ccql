@@ -27,6 +27,7 @@ func main() {
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
+	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
@@ -83,5 +84,5 @@ func main() {
 		}
 	}
 
-	logic.QueryHosts(hosts, *user, *password, queries, *maxConcurrency, *timeout)
+	logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout)
 }

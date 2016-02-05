@@ -10,8 +10,8 @@ import (
 
 // queryHost connects to a given host, issues the given set of queries, and outputs the results
 // line per row in tab delimited format
-func queryHost(host string, user string, password string, queries []string, timeout uint) error {
-	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/?timeout=%ds", user, password, host, timeout)
+func queryHost(host string, user string, password string, defaultSchema string, queries []string, timeout uint) error {
+	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?timeout=%ds", user, password, host, defaultSchema, timeout)
 	db, _, err := sqlutils.GetDB(mysqlURI)
 	if err != nil {
 		return log.Errore(err)
@@ -35,14 +35,14 @@ func queryHost(host string, user string, password string, queries []string, time
 }
 
 // QueryHosts will issue concurrent queries on given list of hosts
-func QueryHosts(hosts []string, user string, password string, queries []string, maxConcurrency uint, timeout uint) {
+func QueryHosts(hosts []string, user string, password string, defaultSchema string, queries []string, maxConcurrency uint, timeout uint) {
 	concurrentHosts := make(chan bool, maxConcurrency)
 	completedHosts := make(chan bool)
 
 	for _, host := range hosts {
 		go func(host string) {
 			concurrentHosts <- true
-			queryHost(host, user, password, queries, timeout)
+			queryHost(host, user, password, defaultSchema, queries, timeout)
 			<-concurrentHosts
 
 			completedHosts <- true
