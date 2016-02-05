@@ -2,9 +2,9 @@ package logic
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
-	"github.com/outbrain/golib/log"
 	"github.com/outbrain/golib/sqlutils"
 )
 
@@ -14,13 +14,13 @@ func queryHost(host string, user string, password string, defaultSchema string, 
 	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?timeout=%ds", user, password, host, defaultSchema, timeout)
 	db, _, err := sqlutils.GetDB(mysqlURI)
 	if err != nil {
-		return log.Errore(err)
+		return err
 	}
 
 	for _, query := range queries {
 		resultData, err := sqlutils.QueryResultData(db, query)
 		if err != nil {
-			return log.Errorf("%s %s", host, err.Error())
+			return err
 		}
 		for _, row := range resultData {
 			output := []string{host}
@@ -42,7 +42,9 @@ func QueryHosts(hosts []string, user string, password string, defaultSchema stri
 	for _, host := range hosts {
 		go func(host string) {
 			concurrentHosts <- true
-			queryHost(host, user, password, defaultSchema, queries, timeout)
+			if err := queryHost(host, user, password, defaultSchema, queries, timeout); err != nil {
+				log.Printf("%s %s", host, err.Error())
+			}
 			<-concurrentHosts
 
 			completedHosts <- true

@@ -225,7 +225,7 @@ func queryResultData(db *sql.DB, query string, retrieveColumns bool, args ...int
 	rows, err := db.Query(query, args...)
 	defer rows.Close()
 	if err != nil && err != sql.ErrNoRows {
-		return EmptyResultData, columns, err
+		return EmptyResultData, columns, log.Errore(err)
 	}
 	if retrieveColumns {
 		// Don't pay if you don't want to

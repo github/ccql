@@ -2,14 +2,15 @@ package main
 
 import (
 	"flag"
+	"log"
+	"os/user"
 
 	"github.com/github/ccql/go/logic"
 	"github.com/github/ccql/go/sql"
 	"github.com/github/ccql/go/text"
 
-	"github.com/outbrain/golib/log"
+	golib_log "github.com/outbrain/golib/log"
 	"gopkg.in/gcfg.v1"
-	"os/user"
 )
 
 const (
@@ -18,6 +19,9 @@ const (
 
 // main is the application's entry point. It will either spawn a CLI or HTTP itnerfaces.
 func main() {
+
+	golib_log.SetLevel(golib_log.FATAL)
+
 	osUser := ""
 	// get os username as owner
 	if usr, err := user.Current(); err == nil {
@@ -44,7 +48,7 @@ func main() {
 	}
 	queries, err := sql.ParseQueries(*queriesText, *queriesFile)
 	if err != nil {
-		log.Fatale(err)
+		log.Fatal(err.Error())
 	}
 	if len(queries) == 0 {
 		log.Fatalf("No query/queries given")
@@ -55,7 +59,7 @@ func main() {
 	}
 	hosts, err := text.ParseHosts(*hostsList, *hostsFile)
 	if err != nil {
-		log.Fatale(err)
+		log.Fatal(err.Error())
 	}
 	if len(hosts) == 0 {
 		log.Fatalf("No hosts given")
