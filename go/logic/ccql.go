@@ -20,7 +20,7 @@ func queryHost(host string, user string, password string, defaultSchema string, 
 	for _, query := range queries {
 		resultData, err := sqlutils.QueryResultData(db, query)
 		if err != nil {
-			return log.Errore(err)
+			return log.Errorf("%s %s", host, err.Error())
 		}
 		for _, row := range resultData {
 			output := []string{host}
