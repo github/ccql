@@ -39,7 +39,7 @@ func main() {
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
 	queriesFile := flag.String("Q", "", "Query/queries input file")
-	timeout := flag.Uint("t", 0, "Connect timeout seconds")
+	timeout := flag.Float64("t", 0, "Connect timeout seconds")
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
 	flag.Parse()
 
