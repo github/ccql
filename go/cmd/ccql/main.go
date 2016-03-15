@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
 	"os/user"
 
 	"github.com/github/ccql/go/logic"
@@ -41,7 +43,10 @@ func main() {
 	flag.Parse()
 
 	if *queriesText == "" && *queriesFile == "" {
-		log.Fatalf(`You must provide a query via -q "<some query>" or via -Q <query-file>`)
+		fmt.Fprintf(os.Stderr, `You must provide a query via -q "<some query>" or via -Q <query-file>`)
+		fmt.Fprintln(os.Stderr)
+		flag.PrintDefaults()
+		return
 	}
 	if *hostsList != "" && *hostsFile != "" {
 		log.Fatalf("Both -q and -Q given. Please specify exactly one")
