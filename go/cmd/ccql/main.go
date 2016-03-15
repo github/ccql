@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
 	"os/user"
 
 	"github.com/github/ccql/go/logic"
@@ -28,6 +30,7 @@ func main() {
 		osUser = usr.Username
 	}
 
+	help := flag.Bool("help", false, "Display usage")
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
@@ -40,8 +43,16 @@ func main() {
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
 	flag.Parse()
 
+	if *help {
+		fmt.Fprintf(os.Stderr, "Usage of ccql:\n")
+		flag.PrintDefaults()
+		return
+	}
 	if *queriesText == "" && *queriesFile == "" {
-		log.Fatalf(`You must provide a query via -q "<some query>" or via -Q <query-file>`)
+		fmt.Fprintf(os.Stderr, "You must provide a query via -q '<some query>' or via -Q <query-file>\n")
+		fmt.Fprintf(os.Stderr, "Usage of ccql:\n")
+		flag.PrintDefaults()
+		return
 	}
 	if *hostsList != "" && *hostsFile != "" {
 		log.Fatalf("Both -q and -Q given. Please specify exactly one")
