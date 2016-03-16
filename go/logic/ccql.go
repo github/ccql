@@ -12,7 +12,6 @@ import (
 // line per row in tab delimited format
 func queryHost(host string, user string, password string, defaultSchema string, queries []string, timeout float64) error {
 	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?timeout=%fs", user, password, host, defaultSchema, timeout)
-	fmt.Println(mysqlURI)
 	db, _, err := sqlutils.GetDB(mysqlURI)
 	if err != nil {
 		return err
