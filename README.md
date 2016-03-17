@@ -29,7 +29,7 @@ Usage of ccql:
     	MySQL password
   -q string
     	Query/queries to execute
-  -t int
+  -t float
     	Connect timeout seconds
   -u string
     	MySQL username (default OS user)
@@ -158,7 +158,7 @@ Please see the [build file](build.sh)
 
 _ccql_ is an abbreviation for _Concurrent Client for MySQL_ or something. We had a few iterations with the name
 but had to replace one and we were all like _yeah_ and _whoa_ and fun times. Eventually we came by this name
-which upset Tom being "too much on the left-side of the keyboard when typing" and that settled the matter.
+which upset @tomkrouper being "too much on the left-side of the keyboard when typing" and that settled the matter.
 Tom uses `alias a='ccql'`.
 
 ## Notes
