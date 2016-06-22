@@ -99,5 +99,7 @@ func main() {
 		}
 	}
 
-	logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout)
+	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout); err != nil {
+		os.Exit(1)
+	}
 }

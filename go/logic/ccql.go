@@ -35,7 +35,7 @@ func queryHost(host string, user string, password string, defaultSchema string, 
 }
 
 // QueryHosts will issue concurrent queries on given list of hosts
-func QueryHosts(hosts []string, user string, password string, defaultSchema string, queries []string, maxConcurrency uint, timeout float64) {
+func QueryHosts(hosts []string, user string, password string, defaultSchema string, queries []string, maxConcurrency uint, timeout float64) (anyError error) {
 	concurrentHosts := make(chan bool, maxConcurrency)
 	completedHosts := make(chan bool)
 
@@ -43,6 +43,7 @@ func QueryHosts(hosts []string, user string, password string, defaultSchema stri
 		go func(host string) {
 			concurrentHosts <- true
 			if err := queryHost(host, user, password, defaultSchema, queries, timeout); err != nil {
+				anyError = err
 				log.Printf("%s %s", host, err.Error())
 			}
 			<-concurrentHosts
@@ -54,4 +55,5 @@ func QueryHosts(hosts []string, user string, password string, defaultSchema stri
 	for range hosts {
 		<-completedHosts
 	}
+	return anyError
 }
