@@ -90,6 +90,7 @@ func main() {
 				Password string
 			}
 		}{}
+		gcfg.RelaxedParserMode = true
 		err := gcfg.ReadFileInto(&mySQLConfig, *credentialsFile)
 		if err != nil {
 			log.Fatalf("Failed to parse gcfg data from file: %+v", err)
