@@ -34,4 +34,4 @@ cp ${tarball}.gz "$BUILD_ARTIFACT_DIR"/ccql/
 # on a version of libc and ld which are widely available, so we can copy the
 # tarball over with jessie in its name so we can deploy it on jessie machines.
 jessie_tarball_name=$(echo $(basename "${tarball}") | sed s/-precise-/-jessie-/)
-cp ${tarball}.gz "$BUILD_ARTIFACT_DIR/gitbackups/${jessie_tarball_name}.gz"
+cp ${tarball}.gz "$BUILD_ARTIFACT_DIR/ccql/${jessie_tarball_name}.gz"
