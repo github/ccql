@@ -151,7 +151,7 @@ Find precompiled binaries for linux (amd64) and Darwin (aka OS/X, amd64) under [
 
 ## Build
 
-_ccql_ is built with Go 1.5, and uses the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
+_ccql_ is built with Go 1.6/1.7, and supports 1.5 with the [Go 1.5 vendor directories](https://golang.org/cmd/go/#hdr-Vendor_Directories), which requires setting `GO15VENDOREXPERIMENT=1`.
 Please see the [build file](build.sh)
 
 ## What's in a name?
