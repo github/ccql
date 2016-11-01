@@ -15,6 +15,8 @@ import (
 	"gopkg.in/gcfg.v1"
 )
 
+var AppVersion string
+bug
 const (
 	maxAllowedConcurrentConnections uint = 128
 )
