@@ -16,7 +16,7 @@ import (
 )
 
 var AppVersion string
-bug
+
 const (
 	maxAllowedConcurrentConnections uint = 128
 )
@@ -45,8 +45,11 @@ func main() {
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
 	flag.Parse()
 
+	if AppVersion == "" {
+		AppVersion = "local-build"
+	}
 	if *help {
-		fmt.Fprintf(os.Stderr, "Usage of ccql:\n")
+		fmt.Fprintf(os.Stderr, "Usage of ccql (version: %s):\n", AppVersion)
 		flag.PrintDefaults()
 		return
 	}
