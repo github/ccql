@@ -17,6 +17,8 @@ import (
 
 var AppVersion string
 
+intentional bug
+
 const (
 	maxAllowedConcurrentConnections uint = 128
 )
