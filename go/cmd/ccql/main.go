@@ -21,7 +21,7 @@ const (
 	maxAllowedConcurrentConnections uint = 128
 )
 
-// main is the application's entry point. It will either spawn a CLI or HTTP itnerfaces.
+// main is the application's entry point. It will either spawn a CLI or HTTP interfaces.
 func main() {
 
 	golib_log.SetLevel(golib_log.FATAL)
