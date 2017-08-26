@@ -6,10 +6,12 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"syscall"
 
 	"github.com/github/ccql/go/logic"
 	"github.com/github/ccql/go/sql"
 	"github.com/github/ccql/go/text"
+	"golang.org/x/crypto/ssh/terminal"
 
 	golib_log "github.com/outbrain/golib/log"
 	"gopkg.in/gcfg.v1"
@@ -35,6 +37,7 @@ func main() {
 	help := flag.Bool("help", false, "Display usage")
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
+	askPassword := flag.Bool("P", false, "Ask mySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
 	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
@@ -103,6 +106,15 @@ func main() {
 			*user = mySQLConfig.Client.User
 			*password = mySQLConfig.Client.Password
 		}
+	}
+
+	if *askPassword {
+		fmt.Print("Mysql password: ")
+		passwd, err := terminal.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			log.Fatalf("\nError while get password:", err)
+		}
+		*password = string(passwd)
 	}
 
 	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout); err != nil {
