@@ -1,0 +1,3 @@
+.gopath/
+.vendor/
+bin/
