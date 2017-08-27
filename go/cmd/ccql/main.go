@@ -37,7 +37,7 @@ func main() {
 	help := flag.Bool("help", false, "Display usage")
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
-	askPassword := flag.Bool("P", false, "Ask mySQL password")
+	askPassword := flag.Bool("ask-pass", false, "prompt for MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
 	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
