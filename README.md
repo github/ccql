@@ -1,5 +1,8 @@
 # ccql
-Concurrent, multi server MySQL client
+
+[![downloads](https://img.shields.io/github/downloads/github/ccql/total.svg)](https://github.com/github/ccql/releases/latest)
+
+#### Concurrent, multi server MySQL client
 
 `ccql` is a simple executable utility which executes a given set of queries on a given set of MySQL hosts
  in parallel.
