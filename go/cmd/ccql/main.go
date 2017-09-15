@@ -15,6 +15,7 @@ import (
 
 	golib_log "github.com/outbrain/golib/log"
 	"gopkg.in/gcfg.v1"
+	"strings"
 )
 
 var AppVersion string
@@ -34,12 +35,13 @@ func main() {
 		osUser = usr.Username
 	}
 
+	osUser = "root"
 	help := flag.Bool("help", false, "Display usage")
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
 	askPassword := flag.Bool("ask-pass", false, "prompt for MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
-	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
+	schemaList := flag.String("s", "information_schema", "List of Schema to query from.")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
@@ -94,9 +96,9 @@ func main() {
 	if *credentialsFile != "" {
 		mySQLConfig := struct {
 			Client struct {
-				User     string
-				Password string
-			}
+				       User     string
+				       Password string
+			       }
 		}{}
 		gcfg.RelaxedParserMode = true
 		err := gcfg.ReadFileInto(&mySQLConfig, *credentialsFile)
@@ -117,7 +119,9 @@ func main() {
 		*password = string(passwd)
 	}
 
-	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout); err != nil {
+	schemas := strings.Split(*schemaList, ",")
+
+	if err := logic.QuerySchemas(hosts, *user, *password, schemas, queries, *maxConcurrency, *timeout); err != nil {
 		os.Exit(1)
 	}
 }
