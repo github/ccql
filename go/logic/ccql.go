@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-
 	"github.com/outbrain/golib/sqlutils"
 	"sync"
 )
@@ -13,7 +12,6 @@ import (
 // line per row in tab delimited format
 func queryHost(host string, user string, password string, schema string, queries []string, timeout float64) error {
 	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?timeout=%fs", user, password, host, schema, timeout)
-	fmt.Println(mysqlURI)
 	db, _, err := sqlutils.GetDB(mysqlURI)
 	if err != nil {
 		return err
