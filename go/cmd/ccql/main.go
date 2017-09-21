@@ -35,7 +35,6 @@ func main() {
 		osUser = usr.Username
 	}
 
-	osUser = "root"
 	help := flag.Bool("help", false, "Display usage")
 	user := flag.String("u", osUser, "MySQL username")
 	password := flag.String("p", "", "MySQL password")
