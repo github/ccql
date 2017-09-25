@@ -47,6 +47,8 @@ func main() {
 	queriesFile := flag.String("Q", "", "Query/queries input file")
 	timeout := flag.Float64("t", 0, "Connect timeout seconds")
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
+	viewSourceSchema := flag.Bool("v", false, "View the source schema of the results")
+
 	flag.Parse()
 
 	if AppVersion == "" {
@@ -120,7 +122,7 @@ func main() {
 
 	schemas := strings.Split(*databases, ",")
 
-	if err := logic.QuerySchemas(hosts, *user, *password, schemas, queries, *maxConcurrency, *timeout); err != nil {
+	if err := logic.QuerySchemas(hosts, *user, *password, schemas, queries, *maxConcurrency, *timeout, *viewSourceSchema); err != nil {
 		os.Exit(1)
 	}
 }
