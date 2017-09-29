@@ -16,7 +16,6 @@ func queryHost(host string, user string, password string, schema string, queries
 	if err != nil {
 		return err
 	}
-	fmt.Println()
 	for _, query := range queries {
 		resultData, err := sqlutils.QueryResultData(db, query)
 		if err != nil {
@@ -43,7 +42,6 @@ func QuerySchemas(hosts []string, user string, password string, schemas []string
 	concurrentHosts := make(chan bool, maxConcurrency)
 	completedHosts := make(chan bool)
 	var wg sync.WaitGroup
-
 	for _, host := range hosts {
 		go func(host string) {
 			wg.Add(len(schemas))
@@ -62,7 +60,6 @@ func QuerySchemas(hosts []string, user string, password string, schemas []string
 			<-concurrentHosts
 			completedHosts <- true
 		}(host)
-
 	}
 
 	// Barrier. Wait for all to complete
