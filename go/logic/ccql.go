@@ -22,10 +22,10 @@ func queryHost(host string, user string, password string, schema string, queries
 			return err
 		}
 		for _, row := range resultData {
-			output := []string{host, schema}
-			if !viewSourceSchema {
-				output = append([]string(nil), output[:1]...)
-				output[0] = host
+			output := []string{host}
+			if viewSourceSchema {
+				outputSchema := []string{schema}
+				output = append(output, outputSchema...)
 			}
 			for _, rowCell := range row {
 				output = append(output, rowCell.String)
