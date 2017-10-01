@@ -24,8 +24,7 @@ func queryHost(host string, user string, password string, schema string, queries
 		for _, row := range resultData {
 			output := []string{host}
 			if viewSourceSchema {
-				outputSchema := []string{schema}
-				output = append(output, outputSchema...)
+				output = append(output, schema)
 			}
 			for _, rowCell := range row {
 				output = append(output, rowCell.String)
