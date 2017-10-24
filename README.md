@@ -23,7 +23,9 @@ Usage of ccql:
   -Q string
     	Query/queries input file
   -d string
-      Schemas to use (default "information_schema")
+      Default schema to use (default "information_schema")
+  -s string
+      Comma separated list of schemas, overrides '-d'. Implies printing schema name to output
   -h string
     	Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin
   -m uint

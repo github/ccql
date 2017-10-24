@@ -48,3 +48,17 @@ func TestParseHostsMulti(t *testing.T) {
 		}
 	}
 }
+
+func TestSplitNonEmpty(t *testing.T) {
+	s := "the, quick,, brown,fox ,,"
+	splits := SplitNonEmpty(s, ",")
+
+	if len(splits) != 4 {
+		t.Errorf("expected 4 tokens; got %+v", len(splits))
+	}
+	join := strings.Join(splits, ";")
+	expected := "the;quick;brown;fox"
+	if join != expected {
+		t.Errorf("expected tokens: `%+v`. Got: `%+v`", expected, join)
+	}
+}

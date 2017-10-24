@@ -15,7 +15,6 @@ import (
 
 	golib_log "github.com/outbrain/golib/log"
 	"gopkg.in/gcfg.v1"
-	"strings"
 )
 
 var AppVersion string
@@ -40,14 +39,14 @@ func main() {
 	password := flag.String("p", "", "MySQL password")
 	askPassword := flag.Bool("ask-pass", false, "prompt for MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
-	databases := flag.String("d", "information_schema", "List of databases to query from.")
+	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
+	schemasList := flag.String("s", "", "List of databases to query from; overrides -d, prints schema name to output")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
 	queriesFile := flag.String("Q", "", "Query/queries input file")
 	timeout := flag.Float64("t", 0, "Connect timeout seconds")
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
-	viewSourceSchema := flag.Bool("v", false, "View the source schema of the results")
 
 	flag.Parse()
 
@@ -112,7 +111,7 @@ func main() {
 	}
 
 	if *askPassword {
-		fmt.Println("Mysql password: ")
+		fmt.Print("Mysql password: ")
 		passwd, err := terminal.ReadPassword(int(syscall.Stdin))
 		if err != nil {
 			log.Fatalf("\nError while get password:", err)
@@ -120,9 +119,9 @@ func main() {
 		*password = string(passwd)
 	}
 
-	schemas := strings.Split(*databases, ",")
+	schemas := text.SplitNonEmpty(*schemasList, ",")
 
-	if err := logic.QuerySchemas(hosts, *user, *password, schemas, queries, *maxConcurrency, *timeout, *viewSourceSchema); err != nil {
+	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, schemas, queries, *maxConcurrency, *timeout); err != nil {
 		os.Exit(1)
 	}
 }
