@@ -24,8 +24,6 @@ Usage of ccql:
     	Query/queries input file
   -d string
       Default schema to use (default "information_schema")
-  -s string
-      Comma separated list of schemas, overrides '-d'. Implies printing schema name to output
   -h string
     	Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin
   -m uint
@@ -34,6 +32,8 @@ Usage of ccql:
     	MySQL password
   -q string
     	Query/queries to execute
+  -s string
+      List of databases to query from; overrides -d, prints schema name to output
   -t float
     	Connect timeout seconds
   -u string
