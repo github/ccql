@@ -40,12 +40,14 @@ func main() {
 	askPassword := flag.Bool("ask-pass", false, "prompt for MySQL password")
 	credentialsFile := flag.String("C", "", "Credentials file, expecting [client] scope, with 'user', 'password' fields. Overrides -u and -p")
 	defaultSchema := flag.String("d", "information_schema", "Default schema to use")
+	schemasList := flag.String("s", "", "List of databases to query from; overrides -d, prints schema name to output")
 	hostsList := flag.String("h", "", "Comma or space delimited list of hosts in hostname[:port] format. If not given, hosts read from stdin")
 	hostsFile := flag.String("H", "", "Hosts file, hostname[:port] comma or space or newline delimited format. If not given, hosts read from stdin")
 	queriesText := flag.String("q", "", "Query/queries to execute")
 	queriesFile := flag.String("Q", "", "Query/queries input file")
 	timeout := flag.Float64("t", 0, "Connect timeout seconds")
 	maxConcurrency := flag.Uint("m", 32, "Max concurrent connections")
+
 	flag.Parse()
 
 	if AppVersion == "" {
@@ -117,7 +119,9 @@ func main() {
 		*password = string(passwd)
 	}
 
-	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, queries, *maxConcurrency, *timeout); err != nil {
+	schemas := text.SplitNonEmpty(*schemasList, ",")
+
+	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, schemas, queries, *maxConcurrency, *timeout); err != nil {
 		os.Exit(1)
 	}
 }

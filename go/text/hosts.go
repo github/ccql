@@ -43,3 +43,13 @@ func ParseHosts(hostsList string, hostsFile string) (hosts []string, err error) 
 
 	return hosts, err
 }
+
+func SplitNonEmpty(s string, sep string) (result []string) {
+	tokens := strings.Split(s, sep)
+	for _, token := range tokens {
+		if token != "" {
+			result = append(result, strings.TrimSpace(token))
+		}
+	}
+	return result
+}
