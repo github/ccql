@@ -55,7 +55,7 @@ They may indicate a port. The default port, if unspecified, is `3306`
 You may provide a query or a list of queries in the following ways:
 - single query, `-q "select @@global.server_id"`
 - multiple queries, semicolon delimited: `-q "select @@global.server_id; set global slave_net_timeout:=10"`
-- single or mutiple queries from text file: `-Q /path/to/queries.sql`
+- single or multiple queries from text file: `-Q /path/to/queries.sql`
 
 Queries are delimited by a semicolon (`;`). The last query may, but does not have to, be terminated by a semicolon.
 Quotes are respected, up to a reasonable level. It is valid to include a semicolon in a quoted text, as in `select 'single;query'`. However `ccql` does not employ a full blown parser, so please don't overdo it. For example, the following may not be parsed correctly: `select '\';\''`. You get it.
