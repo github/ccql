@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 )
@@ -73,6 +75,35 @@ func TestParseQueriesQuotes(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
+	if len(queries) != 3 {
+		t.Errorf("expected 3 queries; got %+v", len(queries))
+		t.Errorf("%+v", strings.Join(queries, "::"))
+	}
+	result := strings.Join(queries, ";")
+	if result != `select 1;select '2;2';select 3` {
+		t.Errorf("got unexpected results: `%+v`", result)
+	}
+}
+
+func TestParseQueriesFile(t *testing.T) {
+	queriesText := `select 1; select '2;2' ; select 3`
+	tmpFile, err := ioutil.TempFile(os.TempDir(), "querytest-")
+
+	if err != nil {
+		t.Errorf("error creating temporary file: %s", err.Error())
+	}
+
+	defer os.Remove(tmpFile.Name())
+
+	if _, err = tmpFile.Write([]byte(queriesText)); err != nil {
+		t.Errorf("error while trying to write to temporary file %s: %s", tmpFile.Name(), err.Error())
+	}
+
+	queries, err := ParseQueries("", tmpFile.Name())
+	if err != nil {
+		t.Error(err.Error())
+	}
+
 	if len(queries) != 3 {
 		t.Errorf("expected 3 queries; got %+v", len(queries))
 		t.Errorf("%+v", strings.Join(queries, "::"))
