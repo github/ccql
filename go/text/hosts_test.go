@@ -1,6 +1,8 @@
 package text
 
 import (
+	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 )
@@ -47,6 +49,43 @@ func TestParseHostsMulti(t *testing.T) {
 			t.Errorf("got unexpected results: `%+v`", result)
 		}
 	}
+}
+
+func TestParseHostFiles(t *testing.T) {
+	s := `host1 host2:4408 host3`
+
+	tmpFile, err := ioutil.TempFile(os.TempDir(), "querytest-")
+
+	if err != nil {
+		t.Errorf("error creating temporary file: %s", err.Error())
+	}
+
+	defer os.Remove(tmpFile.Name())
+
+	if _, err = tmpFile.Write([]byte(s)); err != nil {
+		t.Errorf("error while trying to write to temporary file %s: %s", tmpFile.Name(), err.Error())
+	}
+
+	hosts, err := ParseHosts("", tmpFile.Name())
+
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if len(hosts) != 3 {
+		t.Errorf("expected 1 host; got %+v", len(hosts))
+	}
+	if hosts[0] != `host1:3306` {
+		t.Errorf("got unexpected host `%+v`", hosts[0])
+	}
+
+	if hosts[1] != `host2:4408` {
+		t.Errorf("got unexpected host `%+v`", hosts[1])
+	}
+
+	if hosts[2] != `host3:3306` {
+		t.Errorf("got unexpected host `%+v`", hosts[2])
+	}
+
 }
 
 func TestSplitNonEmpty(t *testing.T) {
