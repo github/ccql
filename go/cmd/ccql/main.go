@@ -121,7 +121,7 @@ func main() {
 
 	schemas := text.SplitNonEmpty(*schemasList, ",")
 
-	if err := logic.QueryHosts(hosts, schemas, queries, *user, *password, *defaultSchema, *maxConcurrency, *timeout); err != nil {
+	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, schemas, queries, *maxConcurrency, *timeout); err != nil {
 		os.Exit(1)
 	}
 }
