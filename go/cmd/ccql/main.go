@@ -112,7 +112,7 @@ func main() {
 
 	if *askPassword {
 		fmt.Print("Mysql password: ")
-		passwd, err := terminal.ReadPassword(int(syscall.Stdin))
+		passwd, err := terminal.ReadPassword(syscall.Stdin)
 		if err != nil {
 			log.Fatalf("\nError while reading password: %s", err.Error())
 		}
@@ -121,7 +121,7 @@ func main() {
 
 	schemas := text.SplitNonEmpty(*schemasList, ",")
 
-	if err := logic.QueryHosts(hosts, *user, *password, *defaultSchema, schemas, queries, *maxConcurrency, *timeout); err != nil {
+	if err := logic.QueryHosts(hosts, schemas, queries, *user, *password, *defaultSchema, *maxConcurrency, *timeout); err != nil {
 		os.Exit(1)
 	}
 }

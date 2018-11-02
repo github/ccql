@@ -30,7 +30,7 @@ func ParseHosts(hostsList string, hostsFile string) (hosts []string, err error) 
 		}
 		hostsList = string(bytes)
 	}
-	parsedHosts := regexp.MustCompile("[,\\s]").Split(hostsList, -1)
+	parsedHosts := regexp.MustCompile(`[,\s]`).Split(hostsList, -1)
 	for _, host := range parsedHosts {
 		host = strings.TrimSpace(host)
 		if host != "" {
@@ -44,6 +44,7 @@ func ParseHosts(hostsList string, hostsFile string) (hosts []string, err error) 
 	return hosts, err
 }
 
+// SplitNonEmpty performs a strings.Split operations and filters out empty strings when returning a string slice.
 func SplitNonEmpty(s string, sep string) (result []string) {
 	tokens := strings.Split(s, sep)
 	for _, token := range tokens {
