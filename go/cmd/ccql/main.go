@@ -112,7 +112,7 @@ func main() {
 
 	if *askPassword {
 		fmt.Print("Mysql password: ")
-		passwd, err := terminal.ReadPassword(int(syscall.Stdin))
+		passwd, err := terminal.ReadPassword(syscall.Stdin)
 		if err != nil {
 			log.Fatalf("\nError while reading password: %s", err.Error())
 		}
