@@ -1,0 +1,7 @@
+FROM golang:1.12.1
+LABEL maintainer="github@github.com"
+
+COPY . /go/src/github.com/github/ccql
+WORKDIR /go/src/github.com/github/ccql
+
+CMD ["script/test"]
