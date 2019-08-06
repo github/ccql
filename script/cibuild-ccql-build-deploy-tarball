@@ -2,7 +2,10 @@
 
 set -e
 
-script/cibuild
+echo "Building"
+script/build
+
+cd .gopath/src/github.com/github/ccql
 
 # Get a fresh directory and make sure to delete it afterwards
 build_dir=tmp/build
