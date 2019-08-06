@@ -4,13 +4,9 @@ set -e
 
 . script/bootstrap
 
-go version
-ls -l .git
-ls -l
-
 echo "Verifying code is formatted via 'gofmt -s -w  go/'"
 gofmt -s -w  go/
-git diff # --exit-code --quiet
+git diff --exit-code --quiet go/
 
 echo "Building"
 script/build
