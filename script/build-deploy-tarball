@@ -21,7 +21,10 @@ else
     build_arch="$(lsb_release -sc | tr -d ' ' | tr '[:upper:]' '[:lower:]')-$(uname -m)"
 fi
 
+echo "build_arch: $build_arch"
+
 tarball=$build_dir/${commit_sha}-${build_arch}.tar
+echo "tarball: $tarball"
 
 # Create the tarball
 tar cvf $tarball --mode="ugo=rx" bin/
