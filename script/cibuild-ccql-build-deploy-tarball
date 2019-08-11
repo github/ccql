@@ -44,4 +44,4 @@ export CI_MODE=true
 output_fold "Bootstrapping container..." docker-compose build
 output_fold "Running tests..." docker-compose run --rm app
 
-docker-compose -e BUILD_ARTIFACT_DIR=$BUILD_ARTIFACT_DIR -v $BUILD_ARTIFACT_DIR:$BUILD_ARTIFACT_DIR app script/build-deploy-tarball
+docker-compose -e BUILD_ARTIFACT_DIR=$BUILD_ARTIFACT_DIR -v $BUILD_ARTIFACT_DIR:$BUILD_ARTIFACT_DIR up script/build-deploy-tarball
