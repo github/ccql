@@ -35,9 +35,7 @@ mkdir -p "$BUILD_ARTIFACT_DIR"/ccql
 cp ${tarball}.gz "$BUILD_ARTIFACT_DIR"/ccql/
 
 ### HACK HACK HACK ###
-# blame @carlosmn
-# We don't have any jessie machines for building, but a pure-Go binary depends
-# on a version of libc and ld which are widely available, so we can copy the
-# tarball over with jessie in its name so we can deploy it on jessie machines.
-jessie_tarball_name=$(echo $(basename "${tarball}") | sed s/-precise-/-jessie-/)
+# blame @carlosmn and @mattr-
+# Allow builds on stretch to also be used for jessie
+jessie_tarball_name=$(echo $(basename "${tarball}") | sed s/-stretch-/-jessie-/)
 cp ${tarball}.gz "$BUILD_ARTIFACT_DIR/ccql/${jessie_tarball_name}.gz"
