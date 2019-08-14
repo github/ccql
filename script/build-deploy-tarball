@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+echo "Building"
+script/build
+
+cd .gopath/src/github.com/github/ccql
+
+# Get a fresh directory and make sure to delete it afterwards
+build_dir=tmp/build
+rm -rf $build_dir
+mkdir -p $build_dir
+trap "rm -rf $build_dir" EXIT
+
+commit_sha=$(git rev-parse HEAD)
+
+if [ $(uname -s) = "Darwin" ]; then
+    build_arch="$(uname -sr | tr -d ' ' | tr '[:upper:]' '[:lower:]')-$(uname -m)"
+else
+    build_arch="$(lsb_release -sc | tr -d ' ' | tr '[:upper:]' '[:lower:]')-$(uname -m)"
+fi
+
+echo "build_arch: $build_arch"
+
+tarball=$build_dir/${commit_sha}-${build_arch}.tar
+echo "tarball: $tarball"
+
+# Create the tarball
+tar cvf $tarball --mode="ugo=rx" bin/
+
+# Compress it and copy it to the directory for the CI to upload it
+gzip $tarball
+mkdir -p "$BUILD_ARTIFACT_DIR"/ccql
+cp ${tarball}.gz "$BUILD_ARTIFACT_DIR"/ccql/
+
+### HACK HACK HACK ###
+# blame @carlosmn and @mattr-
+# Allow builds on stretch to also be used for jessie
+jessie_tarball_name=$(echo $(basename "${tarball}") | sed s/-stretch-/-jessie-/)
+cp ${tarball}.gz "$BUILD_ARTIFACT_DIR/ccql/${jessie_tarball_name}.gz"

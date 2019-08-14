@@ -1,0 +1,4 @@
+.gopath
+.cache
+Dockerfile*
+.gitignore
